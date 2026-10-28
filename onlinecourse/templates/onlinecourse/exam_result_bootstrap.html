@@ -32,7 +32,7 @@
                 <h2 class="alert-heading h4">Congratulations, {{ request.user.first_name|default:request.user.username }}!</h2>
                 <p class="mb-0">
                     You passed the exam with a score of
-                    <strong>{{ total_score }}/{{ max_score }} ({{ grade }}/100)</strong>.
+                    <strong>{{ total_score }}/{{ possible }} ({{ grade }}/100)</strong>.
                 </p>
             </div>
         {% else %}
@@ -40,7 +40,7 @@
                 <h2 class="alert-heading h4">Sorry, {{ request.user.first_name|default:request.user.username }}.</h2>
                 <p class="mb-0">
                     You did not pass the exam. Your score is
-                    <strong>{{ total_score }}/{{ max_score }} ({{ grade }}/100)</strong>.
+                    <strong>{{ total_score }}/{{ possible }} ({{ grade }}/100)</strong>.
                     A score of at least {{ passing_grade }} is required to pass.
                 </p>
             </div>

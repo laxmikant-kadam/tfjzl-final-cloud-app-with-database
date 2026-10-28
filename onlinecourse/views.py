@@ -181,13 +181,13 @@ def show_exam_result(request, course_id, submission_id):
     selected_ids = list(submission.choices.values_list("id", flat=True))
     questions = course.question_set.prefetch_related("choice_set")
 
-    max_score = 0
+    possible_score = 0
     total_score = 0
     results = []
     for question in questions:
         is_correct = question.is_get_score(selected_ids)
         earned = question.grade if is_correct else 0
-        max_score += question.grade
+        possible_score += question.grade
         total_score += earned
         results.append(
             {
@@ -197,7 +197,7 @@ def show_exam_result(request, course_id, submission_id):
             }
         )
 
-    grade = int(round(total_score / max_score * 100)) if max_score else 0
+    grade = int(round(total_score / possible_score * 100)) if possible_score else 0
 
     attempt_number = Submission.objects.filter(
         enrollment=submission.enrollment, id__lte=submission.id
@@ -211,7 +211,8 @@ def show_exam_result(request, course_id, submission_id):
         "questions": questions,
         "results": results,
         "total_score": total_score,
-        "max_score": max_score,
+        "possible": possible_score,
+        "possible_score": possible_score,
         "grade": grade,
         "passed": grade >= PASSING_GRADE,
         "passing_grade": PASSING_GRADE,
