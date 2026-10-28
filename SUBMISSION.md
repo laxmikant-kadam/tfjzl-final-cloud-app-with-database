@@ -1,16 +1,16 @@
 # Final Project Submission — OnlineCourse
 
-Replace `YOUR-USERNAME/YOUR-REPO` with the GitHub repository that contains this
+Replace `laxmikant-kadam/OnlineCourse` with the GitHub repository that contains this
 project. The line numbers below match the committed version of each file.
 
-> Repository: `https://github.com/YOUR-USERNAME/YOUR-REPO`
+> Repository: `https://github.com/laxmikant-kadam/OnlineCourse`
 
 ## Task 1 — `models.py` (3 points)
 
 GitHub URL:
 
 ```
-https://github.com/YOUR-USERNAME/YOUR-REPO/blob/main/onlinecourse/models.py
+https://github.com/laxmikant-kadam/OnlineCourse/blob/main/onlinecourse/models.py
 ```
 
 Local file: `onlinecourse/models.py`
@@ -24,7 +24,7 @@ selected choices, and `Submission.choices` is a `ManyToManyField` to `Choice`.
 GitHub URL:
 
 ```
-https://github.com/YOUR-USERNAME/YOUR-REPO/blob/main/onlinecourse/admin.py
+https://github.com/laxmikant-kadam/OnlineCourse/blob/main/onlinecourse/admin.py
 ```
 
 Local file: `onlinecourse/admin.py`
@@ -46,7 +46,7 @@ section with all registered models.
 GitHub URL:
 
 ```
-https://github.com/YOUR-USERNAME/YOUR-REPO/blob/main/onlinecourse/templates/onlinecourse/course_details_bootstrap.html
+https://github.com/laxmikant-kadam/OnlineCourse/blob/main/onlinecourse/templates/onlinecourse/course_details_bootstrap.html
 ```
 
 Local file: `onlinecourse/templates/onlinecourse/course_details_bootstrap.html`
@@ -60,7 +60,7 @@ Bootstrap cards, buttons and grid classes. Also renders the mock exam form with
 GitHub URL:
 
 ```
-https://github.com/YOUR-USERNAME/YOUR-REPO/blob/main/onlinecourse/views.py
+https://github.com/laxmikant-kadam/OnlineCourse/blob/main/onlinecourse/views.py
 ```
 
 Local file: `onlinecourse/views.py`
@@ -75,7 +75,7 @@ renders the results).
 GitHub URL:
 
 ```
-https://github.com/YOUR-USERNAME/YOUR-REPO/blob/main/onlinecourse/urls.py
+https://github.com/laxmikant-kadam/OnlineCourse/blob/main/onlinecourse/urls.py
 ```
 
 Local file: `onlinecourse/urls.py`
