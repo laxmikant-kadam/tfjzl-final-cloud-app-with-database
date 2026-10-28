@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ course.name }} | OnlineCourse</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body class="bg-light">
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'onlinecourse:index' %}">OnlineCourse</a>
+            <div class="ms-auto d-flex align-items-center">
+                {% if user.is_authenticated %}
+                    <span class="navbar-text text-white me-3">
+                        {{ user.first_name|default:user.username }} ({{ user.username }})
+                    </span>
+                    <a class="btn btn-outline-light btn-sm" href="{% url 'onlinecourse:logout' %}">Logout</a>
+                {% else %}
+                    <form class="d-flex" action="{% url 'onlinecourse:login' %}" method="post">
+                        {% csrf_token %}
+                        <input class="form-control form-control-sm me-1" type="text" name="username" placeholder="Username" required>
+                        <input class="form-control form-control-sm me-1" type="password" name="psw" placeholder="Password" required>
+                        <button class="btn btn-primary btn-sm" type="submit">Login</button>
+                        <a class="btn btn-link btn-sm text-white" href="{% url 'onlinecourse:registration' %}">Sign Up</a>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page content -->
+    <main class="container py-4">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h1 class="card-title h2">{{ course.name }}</h1>
+                        <p class="lead">{{ course.description }}</p>
+                        {% if course.image %}
+                            <img src="{{ course.image.url }}" class="img-fluid rounded mb-3" alt="{{ course.name }}">
+                        {% endif %}
+                        <p class="text-muted mb-0">
+                            Published on {{ course.pub_date }} &middot;
+                            {{ course.total_enrollment }} learner{{ course.total_enrollment|pluralize }} enrolled
+                        </p>
+                    </div>
+                </div>
+
+                <!-- All lessons that belong to this course -->
+                <h3 class="h4 mt-4 mb-3">Lessons</h3>
+                {% for lesson in lessons %}
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Lesson {{ lesson.order }}: {{ lesson.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            {{ lesson.content|linebreaks }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info">No lessons have been added to this course yet.</div>
+                {% endfor %}
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white"><h5 class="mb-0">Course exam</h5></div>
+                    <div class="card-body">
+                        {% if is_enrolled %}
+                            <p class="text-muted">
+                                Answer every question, then submit your attempt to see your score.
+                            </p>
+                            <button class="btn btn-primary w-100" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#examForm"
+                                    aria-expanded="false" aria-controls="examForm">
+                                Take Exam
+                            </button>
+                        {% elif user.is_authenticated %}
+                            <p class="text-muted">Enroll in this course to take the mock exam.</p>
+                            <form action="{% url 'onlinecourse:enroll' course.id %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-primary w-100" type="submit">Enroll</button>
+                            </form>
+                        {% else %}
+                            <p class="text-muted">Log in and enroll to take the mock exam.</p>
+                            <a class="btn btn-primary w-100" href="{% url 'onlinecourse:login' %}">Login</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mock exam -->
+        {% if is_enrolled %}
+            <div class="collapse mt-4" id="examForm">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white"><h5 class="mb-0">Mock exam</h5></div>
+                    <div class="card-body">
+                        <form id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
+                            {% csrf_token %}
+                            {% for question in questions %}
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">{{ forloop.counter }}. {{ question.question_text }}</h6>
+                                        <small class="text-muted">{{ question.question_point }} point{{ question.question_point|pluralize }}</small>
+                                    </div>
+                                    <div class="card-body">
+                                        {% for choice in question.choice_set.all %}
+                                            <div class="form-check py-1">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="choice_{{ choice.id }}" id="choice_{{ choice.id }}"
+                                                       value="{{ choice.id }}">
+                                                <label class="form-check-label" for="choice_{{ choice.id }}">
+                                                    {{ choice.choice_text }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="alert alert-info">This course does not have an exam yet.</div>
+                            {% endfor %}
+                            {% if questions %}
+                                <button class="btn btn-success" type="submit">Submit exam</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </main>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

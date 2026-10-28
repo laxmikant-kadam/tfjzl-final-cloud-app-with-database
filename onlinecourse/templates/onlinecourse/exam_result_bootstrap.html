@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Exam results | {{ course.name }}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body class="bg-light">
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'onlinecourse:index' %}">OnlineCourse</a>
+            <div class="ms-auto d-flex align-items-center">
+                {% if user.is_authenticated %}
+                    <span class="navbar-text text-white me-3">
+                        {{ user.first_name|default:user.username }} ({{ user.username }})
+                    </span>
+                    <a class="btn btn-outline-light btn-sm" href="{% url 'onlinecourse:logout' %}">Logout</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        <h1 class="h3 mb-1">{{ course.name }}</h1>
+        <p class="text-muted">Mock exam result &middot; attempt #{{ attempt_number }}</p>
+
+        {% if passed %}
+            <div class="alert alert-success">
+                <h2 class="alert-heading h4">Congratulations, {{ request.user.first_name|default:request.user.username }}!</h2>
+                <p class="mb-0">
+                    You passed the exam with a score of
+                    <strong>{{ total_score }}/{{ max_score }} ({{ grade }}/100)</strong>.
+                </p>
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                <h2 class="alert-heading h4">Sorry, {{ request.user.first_name|default:request.user.username }}.</h2>
+                <p class="mb-0">
+                    You did not pass the exam. Your score is
+                    <strong>{{ total_score }}/{{ max_score }} ({{ grade }}/100)</strong>.
+                    A score of at least {{ passing_grade }} is required to pass.
+                </p>
+            </div>
+            <a class="btn btn-outline-danger mb-3" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
+        {% endif %}
+
+        <div class="card shadow-sm mt-3">
+            <div class="card-header bg-white">
+                <h2 class="h5 mb-0">Exam results</h2>
+            </div>
+            <div class="card-body">
+                {% for result in results %}
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                            <span>
+                                <strong>{{ forloop.counter }}. {{ result.question.question_text }}</strong>
+                            </span>
+                            <span class="badge {% if result.is_correct %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ result.earned }}/{{ result.question.question_point }} points
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                {% for choice in result.question.choice_set.all %}
+                                    <li class="py-1">
+                                        {% if choice.id in selected_ids %}
+                                            {% if choice.is_correct %}
+                                                <span class="text-success">&#10004; Correct answer: {{ choice.choice_text }}</span>
+                                            {% else %}
+                                                <span class="text-danger">&#10008; Wrong answer: {{ choice.choice_text }}</span>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if choice.is_correct %}
+                                                <span class="text-warning">&#9888; Correct answer not selected: {{ choice.choice_text }}</span>
+                                            {% else %}
+                                                <span class="text-muted">{{ choice.choice_text }}</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info mb-0">This exam does not have any questions.</div>
+                {% endfor %}
+
+                <a class="btn btn-primary" href="{% url 'onlinecourse:course_details' course.id %}">Back to course</a>
+                <a class="btn btn-outline-secondary" href="{% url 'onlinecourse:index' %}">All courses</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
