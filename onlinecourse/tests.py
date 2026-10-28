@@ -19,9 +19,8 @@ class ExamFlowTests(TestCase):
         self.question = Question.objects.create(
             course=self.course,
             question_text="What is Django?",
-            question_point=10,
+            grade=10,
         )
-        self.question.lessons.add(self.lesson)
         self.correct = Choice.objects.create(
             question=self.question, choice_text="A web framework", is_correct=True
         )

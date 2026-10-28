@@ -59,7 +59,7 @@
                                 <strong>{{ forloop.counter }}. {{ result.question.question_text }}</strong>
                             </span>
                             <span class="badge {% if result.is_correct %}bg-success{% else %}bg-danger{% endif %}">
-                                {{ result.earned }}/{{ result.question.question_point }} points
+                                {{ result.earned }}/{{ result.question.grade }} points
                             </span>
                         </div>
                         <div class="card-body">

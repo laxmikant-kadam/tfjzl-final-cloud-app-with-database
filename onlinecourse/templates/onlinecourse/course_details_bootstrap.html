@@ -105,7 +105,7 @@
                                 <div class="card mb-3">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0">{{ forloop.counter }}. {{ question.question_text }}</h6>
-                                        <small class="text-muted">{{ question.question_point }} point{{ question.question_point|pluralize }}</small>
+                                        <small class="text-muted">{{ question.grade }} point{{ question.grade|pluralize }}</small>
                                     </div>
                                     <div class="card-body">
                                         {% for choice in question.choice_set.all %}

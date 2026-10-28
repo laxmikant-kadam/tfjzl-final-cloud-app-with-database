@@ -16,7 +16,7 @@ https://github.com/laxmikant-kadam/OnlineCourse/blob/main/onlinecourse/models.py
 Local file: `onlinecourse/models.py`
 
 Contains `Question`, `Choice` and `Submission` (plus `Instructor`, `Learner`,
-`Course`, `Lesson` and `Enrollment`). `Question.get_score()` evaluates the
+`Course`, `Lesson` and `Enrollment`). `Question.is_get_score()` evaluates the
 selected choices, and `Submission.choices` is a `ManyToManyField` to `Choice`.
 
 ## Task 2 — `admin.py` (3 points)

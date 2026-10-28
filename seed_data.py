@@ -154,7 +154,6 @@ def main():
                 course=course, order=order, title=title, content=content
             )
         )
-
     questions = [
         (
             "Which command applies the migrations and creates the database tables?",
@@ -201,10 +200,8 @@ def main():
         question = Question.objects.create(
             course=course,
             question_text=f"{text}",
-            question_point=points,
+            grade=points,
         )
-        # Questions can optionally be linked to a lesson.
-        question.lessons.add(lesson_objects[min(order - 1, len(lesson_objects) - 1)])
         for choice_text, is_correct in choices:
             Choice.objects.create(
                 question=question, choice_text=choice_text, is_correct=is_correct

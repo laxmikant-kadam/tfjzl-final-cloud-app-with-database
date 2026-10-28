@@ -185,14 +185,15 @@ def show_exam_result(request, course_id, submission_id):
     total_score = 0
     results = []
     for question in questions:
-        earned = question.get_score(selected_ids)
-        max_score += question.question_point
+        is_correct = question.is_get_score(selected_ids)
+        earned = question.grade if is_correct else 0
+        max_score += question.grade
         total_score += earned
         results.append(
             {
                 "question": question,
                 "earned": earned,
-                "is_correct": earned == question.question_point,
+                "is_correct": is_correct,
             }
         )
 
