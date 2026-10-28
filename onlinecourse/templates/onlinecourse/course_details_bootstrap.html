@@ -31,28 +31,24 @@
         </div>
     </nav>
 
-    <!-- Page content -->
     <main class="container py-4">
-        <div class="row g-4">
-            <div class="col-lg-8">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h1 class="card-title h2">{{ course.name }}</h1>
-                        <p class="lead">{{ course.description }}</p>
-                        {% if course.image %}
-                            <img src="{{ course.image.url }}" class="img-fluid rounded mb-3" alt="{{ course.name }}">
-                        {% endif %}
-                        <p class="text-muted mb-0">
-                            Published on {{ course.pub_date }} &middot;
-                            {{ course.total_enrollment }} learner{{ course.total_enrollment|pluralize }} enrolled
-                        </p>
-                    </div>
-                </div>
+        <!-- Course name -->
+        <h2 class="mb-2">{{ course.name }}</h2>
+        <p class="lead">{{ course.description }}</p>
+        {% if course.image %}
+            <img src="{{ course.image.url }}" class="img-fluid rounded mb-3" alt="{{ course.name }}">
+        {% endif %}
+        <p class="text-muted">
+            Published on {{ course.pub_date }} &middot;
+            {{ course.total_enrollment }} learner{{ course.total_enrollment|pluralize }} enrolled
+        </p>
 
-                <!-- All lessons that belong to this course -->
-                <h3 class="h4 mt-4 mb-3">Lessons</h3>
-                {% for lesson in lessons %}
-                    <div class="card shadow-sm mb-2">
+        <!-- All lessons that belong to this course -->
+        <h3 class="h4 mt-4 mb-3">Lessons</h3>
+        <div class="row g-3">
+            {% for lesson in course.lesson_set.all %}
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
                         <div class="card-header bg-white">
                             <h5 class="mb-0">Lesson {{ lesson.order }}: {{ lesson.title }}</h5>
                         </div>
@@ -60,36 +56,35 @@
                             {{ lesson.content|linebreaks }}
                         </div>
                     </div>
-                {% empty %}
-                    <div class="alert alert-info">No lessons have been added to this course yet.</div>
-                {% endfor %}
-            </div>
-
-            <div class="col-lg-4">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white"><h5 class="mb-0">Course exam</h5></div>
-                    <div class="card-body">
-                        {% if is_enrolled %}
-                            <p class="text-muted">
-                                Answer every question, then submit your attempt to see your score.
-                            </p>
-                            <button class="btn btn-primary w-100" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#examForm"
-                                    aria-expanded="false" aria-controls="examForm">
-                                Take Exam
-                            </button>
-                        {% elif user.is_authenticated %}
-                            <p class="text-muted">Enroll in this course to take the mock exam.</p>
-                            <form action="{% url 'onlinecourse:enroll' course.id %}" method="post">
-                                {% csrf_token %}
-                                <button class="btn btn-primary w-100" type="submit">Enroll</button>
-                            </form>
-                        {% else %}
-                            <p class="text-muted">Log in and enroll to take the mock exam.</p>
-                            <a class="btn btn-primary w-100" href="{% url 'onlinecourse:login' %}">Login</a>
-                        {% endif %}
-                    </div>
                 </div>
+            {% empty %}
+                <div class="alert alert-info">No lessons have been added to this course yet.</div>
+            {% endfor %}
+        </div>
+
+        <!-- Enrollment / exam -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white"><h5 class="mb-0">Course exam</h5></div>
+            <div class="card-body">
+                {% if is_enrolled %}
+                    <p class="text-muted">
+                        Answer every question, then submit your attempt to see your score.
+                    </p>
+                    <button class="btn btn-primary" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#examForm"
+                            aria-expanded="false" aria-controls="examForm">
+                        Take Exam
+                    </button>
+                {% elif user.is_authenticated %}
+                    <p class="text-muted">Enroll in this course to take the mock exam.</p>
+                    <form action="{% url 'onlinecourse:enroll' course.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit">Enroll</button>
+                    </form>
+                {% else %}
+                    <p class="text-muted">Log in and enroll to take the mock exam.</p>
+                    <a class="btn btn-primary" href="{% url 'onlinecourse:login' %}">Login</a>
+                {% endif %}
             </div>
         </div>
 
